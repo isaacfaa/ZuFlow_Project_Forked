@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        
+        <a href="Signup.html" class="back-button">Go to Sign In</a>
+        <a href="category.html" class="back-button">Go to Category</a>
+
+        <h1>Task Management</h1>
+        
+        
+        <div class="task-form">
+            <h2>Add a New Task</h2>
+            <form id="taskForm">
+                <input type="text" id="name" placeholder="Task Name" required>
+                <input type="text" id="location" placeholder="Location" required>
+                <textarea id="description" placeholder="Description" required></textarea>
+                <input type="email" id="owner" placeholder="Owner Email" required>
+                <button type="submit">Add Task</button>
+            </form>
+        </div>
+
+        
+        <div class="task-list">
+            <h2>Task List</h2>
+            <ul id="tasks">
+               
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('taskForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const location = document.getElementById('location').value;
+            const description = document.getElementById('description').value;
+            const owner = document.getElementById('owner').value;
+
+            const task = { name, location, description, owner };
+            
+            try {
+                const response = await fetch('/api/addTask', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(task)
+                });
+
+                if (response.ok) {
+                    loadTasks();
+                    document.getElementById('taskForm').reset();
+                } else {
+                    alert('Failed to add task');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+
+        async function loadTasks() {
+    try {
+        const response = await fetch('/api/getTasks');
+        const tasks = await response.json();
+        
+        const tasksList = document.getElementById('tasks');
+        tasksList.innerHTML = '';
+
+        for (const task of tasks) {
+            const taskItem = document.createElement('li');
+            let commentsText = 'No comments';
+            try {
+                const response_comment = await fetch(`/get-comment/${task.id}`);
+                if (response_comment.ok) {
+                    const comments = await response_comment.json();
+                    commentsText = comments.comment || 'No comments';
+                }
+            } catch (error) {
+                console.error('Error fetching comments:', error);
+            }
+            taskItem.innerHTML = `
+                <strong>${task.name}</strong> - ${task.location}<br>
+                ${task.description} <br>Owner: ${task.owner}<br>
+                <em>Comments: ${commentsText}</em><br>
+                <button onclick="editTask('${task.id}')">Edit</button>
+                <button onclick="deleteTask('${task.id}')">Delete</button>
+                <button type='button' class='commentbtn' onclick="addComment('${task.id}')">Comment</button>
+            `;
+            tasksList.appendChild(taskItem);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+        async function editTask(id) {
+            const name = prompt("Enter new task name:");
+            const location = prompt("Enter new location:");
+            const description = prompt("Enter new description:");
+
+            if (name && location && description) {
+                try {
+                    const response = await fetch(`/api/editTask/${id}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, location, description })
+                    });
+
+                    if (response.ok) {
+                        loadTasks();
+                    } else {
+                        alert('Failed to edit task');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }
+        }
+
+        async function deleteTask(id) {
+            if (confirm("Are you sure you want to delete this task?")) {
+                try {
+                    const response = await fetch(`/api/deleteTask/${id}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (response.ok) {
+                        loadTasks();
+                    } else {
+                        alert('Failed to delete task');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }
+        }
+
+        async function addComment(id){
+            var url = "http://localhost:5050/comment.html?taskid=" + id
+            window.location.href=url;
+        }
+
+        loadTasks(); // Load tasks on page load
+    </script>
+</body>
+</html>

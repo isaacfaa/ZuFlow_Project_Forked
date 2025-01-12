@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <script src="js/category.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body onload="viewCategories()">
+    <div class="container mt-6">
+        <div class="row align-items-center justify-content-between">
+            <div class="col-md-10 d-flex align-items-center">
+                <a href="index.html" class="back-button mr-3">Go back</a>
+                <h1>Categories</h1>
+            </div>
+            <div class="col-md-2 text-md-right">
+                <button type="button" class="btn btn-primary btn-add-category" data-toggle="modal"
+                    data-target="#categoryModal">
+                    Add Category
+                </button>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <table class="table table-striped table-striped-custom">
+                    <thead>
+                        <tr>
+                            <th>Category ID</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableContent">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="categoryModalLabel">Add a new Category</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="name">Category Name</label>
+                            <input type="text" class="form-control" id="name" placeholder="Enter category name:"
+                                autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="categorydescription">Description</label>
+                            <input type="text" class="form-control" id="categorydescription"
+                                placeholder="Enter a short description:" autocomplete="off">
+                        </div>
+                        <p align="right" id="message" class=""></p>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="addCategory()">Add a new Category</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

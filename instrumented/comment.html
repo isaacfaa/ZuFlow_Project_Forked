@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Management App</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="js/comment.js"></script>
+</head>
+
+<body onload="load_id()">
+    <div class="container">
+        <h1>Task Management App</h1>
+
+        <div class="task-form">
+            <h2>Add a comment</h2>
+            <form id="commentForm">
+                <input id="name" placeholder="name" required>
+                <input id="taskid" value="" hidden>
+                <textarea id="comment" placeholder="Comment" rows="10" required></textarea>
+                <button id="submit-btn" type="submit">Add Comment</button>
+                <p id="message"></p>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

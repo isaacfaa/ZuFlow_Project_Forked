@@ -1,0 +1,28 @@
+{
+  "name": "zuflow_project",
+  "version": "1.0.0",
+  "description": "Project",
+  "main": "index.js",
+  "scripts": {
+    "backend-test": "nyc --nycrc-path .nycrc-backend mocha",
+    "frontend-instrument": "cp -Rf public/ instrumented/ && npx nyc instrument public instrumented",
+    "frontend-test": "rmdir -r .nyc_output & nyc --nycrc-path .nycrc-frontend cypress run"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "cypress": "^13.16.0",
+    "express": "^4.21.1",
+    "fs": "^0.0.1-security",
+    "sinon": "^19.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "@cypress/code-coverage": "^3.13.8",
+    "babel-loader": "^9.2.1",
+    "babel-plugin-istanbul": "^7.0.0",
+    "nyc": "^17.1.0"
+  }
+}
