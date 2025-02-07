@@ -1,9 +1,19 @@
 const express = require('express');
 const bodyParser = require("body-parser");
 const path = require('path'); // Add this line
+const client = require('prom-client');
 const app = express();
 const PORT = process.env.PORT || 5050;
 const startPage = "Signup.html";
+
+const collectDefaultMetrics = client.collectDefaultMetrics;
+collectDefaultMetrics(); // Collects default Node.js metrics
+
+const httpRequestCounter = new client.Counter({
+  name: 'http_requests_total',
+  help: 'Total number of HTTP requests',
+});
+
 
 // Middleware for parsing request bodies
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -11,6 +21,9 @@ app.use(bodyParser.json());
 
 // Serve static files from the public directory
 app.use(express.static("./public"));
+
+const statusMonitor = require('express-status-monitor');
+app.use(statusMonitor());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -54,7 +67,13 @@ app.post('/api/addAccount', addAccount);
 
 // Route to serve the start page
 app.get('/', (req, res) => {
+  httpRequestCounter.inc();
   res.sendFile(__dirname + "/public/" + startPage);
+});
+
+app.get('/metrics', async (req, res) => {
+  res.set('Content-Type', client.register.contentType);
+  res.end(await client.register.metrics());
 });
 
 // Endpoint to add a new category
